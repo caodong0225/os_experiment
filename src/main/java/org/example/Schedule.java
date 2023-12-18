@@ -74,6 +74,7 @@ public class Schedule {
     static ArrayList<ScheduleInfo> scheduleInfo = new ArrayList<>();
     static int round;
     static int priority = 50;
+
     public static void showRRData() {
         System.out.println("N\tet\trt\tc\tr\ts");
         for (ScheduleInfo info : scheduleInfo) {
@@ -87,6 +88,7 @@ public class Schedule {
         }
         printReady();
     }
+
     public static void showPRData() {
         System.out.println("N\tet\trt\tc\tp\ts");
         for (ScheduleInfo info : scheduleInfo) {
@@ -118,20 +120,44 @@ public class Schedule {
         System.out.println();
     }
 
-    public static void priorityAlgorithm()
-    {
+    public static void priorityAlgorithm() {
         int finishedSum = 0;
-        scheduleInfo.sort(new Comparator<ScheduleInfo>() {
-            public int compare(ScheduleInfo o1, ScheduleInfo o2) {
-                return o2.getPriority() - o1.getPriority();
+        while (finishedSum != scheduleInfo.size()) {
+            scheduleInfo.sort(new Comparator<ScheduleInfo>() {
+                public int compare(ScheduleInfo o1, ScheduleInfo o2) {
+                    return o2.getPriority() - o1.getPriority();
+                }
+            });
+            if (!scheduleInfo.get(0).getState().equals("F")) {
+                scheduleInfo.get(0).setState("R");
+                if(scheduleInfo.get(0).getCount()==0)
+                {
+                    scheduleInfo.get(0).setCount(1);
+                }
+                showPRData();
+                int remainingTime = scheduleInfo.get(0).getRemainingTime();
+                scheduleInfo.get(0).setRemainingTime(remainingTime - 1);
+                scheduleInfo.get(0).setElapsedTime(scheduleInfo.get(0).getElapsedTime() + 1);
+                scheduleInfo.get(0).setPriority(scheduleInfo.get(0).getPriority() - 1);
+                if (scheduleInfo.get(0).getRemainingTime() == 0) {
+                    finishedSum++;
+                    scheduleInfo.get(0).setState("F");
+                } else {
+                    scheduleInfo.get(0).setState("W");
+                }
+                for (ScheduleInfo info : scheduleInfo) {
+                    if (info.getState().equals("W")) {
+                        info.setPriority(info.getPriority() + 1);
+                    }
+                }
+            } else {
+                scheduleInfo.add(scheduleInfo.get(0));
+                scheduleInfo.remove(0);
             }
-        });
-        scheduleInfo.get(0).setState("R");
+        }
         showPRData();
-        scheduleInfo.get(0).setCount(scheduleInfo.get(0).getCount() + 1);
-        scheduleInfo.get(0).setElapsedTime(scheduleInfo.get(0).getElapsedTime() + scheduleInfo.get(0).getRemainingTime());
-        scheduleInfo.get(0).setRemainingTime(0);
     }
+
     public static void RR() {
         int finishedSum = 0;
         while (finishedSum != scheduleInfo.size()) {
@@ -177,55 +203,59 @@ public class Schedule {
     }
 
     public static void main(String[] args) {
-        System.out.println("Welcome to the schedule system!\n"
-                + "Please choose the algorithm:\n"
-                + "1.round robin algorithm\n"
-                + "2.priority algorithm\n"
-                + "3.quit");
         Scanner sc = new Scanner(System.in);
         int selected;
-        do {
+        while(true) {
+            System.out.println("Welcome to the schedule system!\n"
+                    + "Please choose the algorithm:\n"
+                    + "1.round robin algorithm\n"
+                    + "2.priority algorithm\n"
+                    + "3.quit");
             selected = sc.nextInt();
             int serviceNum;
-            switch (selected) {
-                case 1:
-                    System.out.println("Please input the round time:");
-                    round = sc.nextInt();
-                    System.out.println("Please input the service number:");
-                    serviceNum = sc.nextInt();
-                    System.out.println("Please input name and service time:\n"
-                            + "For example, if the name is a0 and the service time is 3, then input a0 3");
-                    for (int i = 0; i < serviceNum; i++) {
-                        ScheduleInfo scheduleTemporary = new ScheduleInfo();
-                        scheduleTemporary.setName(sc.next());
-                        scheduleTemporary.setRemainingTime(sc.nextInt());
-                        scheduleTemporary.setCount(0);
-                        scheduleTemporary.setElapsedTime(0);
-                        scheduleTemporary.setRound(round);
-                        scheduleTemporary.setState("W");
-                        scheduleInfo.add(scheduleTemporary);
-                    }
-                    RR();
-                    break;
-                case 2:
-                    System.out.println("Please input the service number:");
-                    serviceNum = sc.nextInt();
-                    System.out.println("Please input name and service time:\n"
-                            + "For example, if the name is a0 and the service time is 3, then input a0 3");
-                    for (int i = 0; i < serviceNum; i++) {
-                        ScheduleInfo scheduleTemporary = new ScheduleInfo();
-                        scheduleTemporary.setName(sc.next());
-                        scheduleTemporary.setRemainingTime(sc.nextInt());
-                        scheduleTemporary.setCount(0);
-                        scheduleTemporary.setElapsedTime(0);
-                        scheduleTemporary.setPriority(priority-scheduleTemporary.remainingTime);
-                        scheduleTemporary.setState("W");
-                        scheduleInfo.add(scheduleTemporary);
-                    }
-                    priorityAlgorithm();
-                    break;
+            if (selected==1) {
+                scheduleInfo.clear();
+                System.out.println("Please input the round time:");
+                round = sc.nextInt();
+                System.out.println("Please input the service number:");
+                serviceNum = sc.nextInt();
+                System.out.println("Please input name and service time:\n"
+                        + "For example, if the name is a0 and the service time is 3, then input a0 3");
+                for (int i = 0; i < serviceNum; i++) {
+                    ScheduleInfo scheduleTemporary = new ScheduleInfo();
+                    scheduleTemporary.setName(sc.next());
+                    scheduleTemporary.setRemainingTime(sc.nextInt());
+                    scheduleTemporary.setCount(0);
+                    scheduleTemporary.setElapsedTime(0);
+                    scheduleTemporary.setRound(round);
+                    scheduleTemporary.setState("W");
+                    scheduleInfo.add(scheduleTemporary);
+                }
+                RR();
             }
-        } while (selected != 3);
+            else if(selected==2) {
+                scheduleInfo.clear();
+                System.out.println("Please input the service number:");
+                serviceNum = sc.nextInt();
+                System.out.println("Please input name and service time:\n"
+                        + "For example, if the name is a0 and the service time is 3, then input a0 3");
+                for (int i = 0; i < serviceNum; i++) {
+                    ScheduleInfo scheduleTemporary = new ScheduleInfo();
+                    scheduleTemporary.setName(sc.next());
+                    scheduleTemporary.setRemainingTime(sc.nextInt());
+                    scheduleTemporary.setCount(0);
+                    scheduleTemporary.setElapsedTime(0);
+                    scheduleTemporary.setPriority(priority - scheduleTemporary.remainingTime);
+                    scheduleTemporary.setState("W");
+                    scheduleInfo.add(scheduleTemporary);
+                }
+                priorityAlgorithm();
+            }
+            else if(selected==3)
+            {
+                break;
+            }
+        }
         sc.close();
     }
 
