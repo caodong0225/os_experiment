@@ -10,6 +10,7 @@ public class Banker {
     static int resource;
     static int customer;
     static int[] available;
+    static String[] customerName;
     public static boolean judge(int[] request,int[] actual)
     {
         for(int i=0;i<resource;i++)
@@ -41,7 +42,7 @@ public class Banker {
         for(int k=0;k<customer;k++) {
             for (int i = 0; i < customer; i++) {
                 if (judge(needCopy[i], availableCopy) && visited[i] == 0) {
-                    System.out.print("Customer" + i + "\t");
+                    System.out.print(customerName[i] + "\t");
                     for (int j = 0; j < resource; j++) {
                         System.out.print(availableCopy[j] + " ");
                         availableCopy[j] = availableCopy[j] + allocatedCopy[i][j];
@@ -97,8 +98,8 @@ public class Banker {
         Scanner requestScanner = new Scanner(System.in);
         System.out.println("Please input the customer’s name and request:\n" +
                 "For example, if the customer’s name is customer0 and the request is 1 2 3 4, then input customer0 1 2 3 4");
-        String customerName = requestScanner.next();
-        int customerIndex = Integer.parseInt(customerName.substring(customerName.length()-1));
+        String customerNameTemp = requestScanner.next();
+        int customerIndex = Integer.parseInt(customerNameTemp.substring(customerNameTemp.length()-1));
         int[] request = new int[resource];
         for(int i=0;i<resource;i++)
         {
@@ -127,7 +128,7 @@ public class Banker {
         else
         {
             System.out.println("RESOURCE INSUFFICIENT!!!");
-            System.out.println("CUSTOMER"+customerIndex+" CAN NOT  OBTAIN RESOURCES IMMEDIATELY.");
+            System.out.println(customerName[customerIndex]+" CAN NOT  OBTAIN RESOURCES IMMEDIATELY.");
         }
     }
 
@@ -139,11 +140,14 @@ public class Banker {
         max = new int[customer][resource];
         allocated = new int[customer][resource];
         available = new int[resource];
+        customerName = new String[customer];
         System.out.println("Input the amount of resource (maximum , allocated) of each customer:");
-        System.out.println("For example, if the maximum amount of resource of customer0 is 10, 20, 30, 40, and the allocated amount is 5, 10, 15, 20, then input 10 20 30 40 5 10 15 20");
-        for(int index=0;index<customer;index++)
+        System.out.println("For example, if the maximum amount of resource of customer0 is 10, 20, 30, 40, and the allocated amount is 5, 10, 15, 20, then input customer0 10 20 30 40 5 10 15 20");
+        for(int j=0;j<customer;j++)
         {
-            System.out.println("Customer"+index+":");
+            String customerNameTemp = scanner.next();
+            int index = Integer.parseInt(customerNameTemp.substring(customerNameTemp.length()-1));
+            customerName[index] = customerNameTemp;
             int[] maxTem = new int[resource];
             int[] allocatedTem = new int[resource];
             for(int i=0;i<resource;i++)
