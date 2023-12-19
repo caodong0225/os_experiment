@@ -38,7 +38,7 @@ public class Banker {
         int[] visited = new int[customer];
         int record = 0;
         work = new int[customer][resource];
-        System.out.println("\t\t\tWork\tNeed\tAllo\tWork+A\tFinish");
+        System.out.println("Name\tWork\tNeed\tAllo\tWork+A\tFinish");
         for(int k=0;k<customer;k++) {
             for (int i = 0; i < customer; i++) {
                 if (judge(needCopy[i], availableCopy) && visited[i] == 0) {

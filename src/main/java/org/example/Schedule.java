@@ -1,7 +1,6 @@
 package org.example;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Scanner;
 
 class ScheduleInfo {
@@ -76,7 +75,7 @@ public class Schedule {
     static int priority = 50;
 
     public static void showRRData() {
-        System.out.println("N\tet\trt\tc\tr\ts");
+        System.out.println("Name\telapse\tremain\tcount\tround\tstate");
         for (ScheduleInfo info : scheduleInfo) {
             System.out.print(info.getName() + "\t");
             System.out.print(info.getElapsedTime() + "\t");
@@ -90,7 +89,7 @@ public class Schedule {
     }
 
     public static void showPRData() {
-        System.out.println("N\tet\trt\tc\tp\ts");
+        System.out.println("Name\telapse\tremain\tcount\tpriori\tstate");
         for (ScheduleInfo info : scheduleInfo) {
             System.out.print(info.getName() + "\t");
             System.out.print(info.getElapsedTime() + "\t");
@@ -123,11 +122,7 @@ public class Schedule {
     public static void priorityAlgorithm() {
         int finishedSum = 0;
         while (finishedSum != scheduleInfo.size()) {
-            scheduleInfo.sort(new Comparator<ScheduleInfo>() {
-                public int compare(ScheduleInfo o1, ScheduleInfo o2) {
-                    return o2.getPriority() - o1.getPriority();
-                }
-            });
+            scheduleInfo.sort((o1, o2) -> o2.getPriority() - o1.getPriority());
             if (!scheduleInfo.get(0).getState().equals("F")) {
                 scheduleInfo.get(0).setState("R");
                 if(scheduleInfo.get(0).getCount()==0)
