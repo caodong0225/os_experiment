@@ -134,16 +134,16 @@ public class Schedule {
                 scheduleInfo.get(0).setRemainingTime(remainingTime - 1);
                 scheduleInfo.get(0).setElapsedTime(scheduleInfo.get(0).getElapsedTime() + 1);
                 scheduleInfo.get(0).setPriority(scheduleInfo.get(0).getPriority() - 1);
+                for (ScheduleInfo info : scheduleInfo) {
+                    if (info.getState().equals("W")) {
+                        info.setPriority(info.getPriority() + 1);
+                    }
+                }
                 if (scheduleInfo.get(0).getRemainingTime() == 0) {
                     finishedSum++;
                     scheduleInfo.get(0).setState("F");
                 } else {
                     scheduleInfo.get(0).setState("W");
-                }
-                for (ScheduleInfo info : scheduleInfo) {
-                    if (info.getState().equals("W")) {
-                        info.setPriority(info.getPriority() + 1);
-                    }
                 }
             } else {
                 scheduleInfo.add(scheduleInfo.get(0));
