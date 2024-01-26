@@ -22,7 +22,7 @@ public class Banker {
         }
         return true;
     }
-    public static void cal_need()
+    public static void calNeed()
     {
         need = new int[customer][resource];
         for(int i=0;i<customer;i++)
@@ -33,7 +33,7 @@ public class Banker {
             }
         }
     }
-    public static void cal_work(int[] availableCopy,int[][] allocatedCopy,int[][] needCopy)
+    public static void calWork(int[] availableCopy, int[][] allocatedCopy, int[][] needCopy)
     {
         int[] visited = new int[customer];
         int record = 0;
@@ -81,7 +81,7 @@ public class Banker {
     }
     public static void systemSecurity()
     {
-        cal_need();
+        calNeed();
         int[] availableCopy = new int[resource];
         System.arraycopy(available, 0, availableCopy, 0, resource);
         int[][] allocatedCopy = new int[customer][resource];
@@ -91,7 +91,7 @@ public class Banker {
             System.arraycopy(allocated[i], 0, allocatedCopy[i], 0, resource);
             System.arraycopy(need[i], 0, needCopy[i], 0, resource);
         }
-        cal_work(availableCopy,allocatedCopy,needCopy);
+        calWork(availableCopy,allocatedCopy,needCopy);
     }
     public static void requestSecurity()
     {
@@ -105,7 +105,7 @@ public class Banker {
         {
             request[i] = requestScanner.nextInt();
         }
-        cal_need();
+        calNeed();
         int[] availableCopy = new int[resource];
         System.arraycopy(available, 0, availableCopy, 0, resource);
         int[][] allocatedCopy = new int[customer][resource];
@@ -123,7 +123,7 @@ public class Banker {
                 allocatedCopy[customerIndex][i] = allocatedCopy[customerIndex][i] + request[i];
                 needCopy[customerIndex][i] = needCopy[customerIndex][i] - request[i];
             }
-            cal_work(availableCopy,allocatedCopy,needCopy);
+            calWork(availableCopy,allocatedCopy,needCopy);
         }
         else
         {
